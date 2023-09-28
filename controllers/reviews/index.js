@@ -19,8 +19,7 @@ async function getOwnReview(req, res) {
 }
 
 async function addReview(req, res) {
-  // Заменить тут email to name
-  const { _id: owner, email: name } = req.user;
+  const { _id: owner, name } = req.user;
 
   const ownReview = await Review.find({ owner });
   if (ownReview && ownReview.length !== 0) {
