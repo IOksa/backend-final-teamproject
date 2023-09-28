@@ -4,9 +4,7 @@ const crypto = require("node:crypto");
 
 const {User} = require("../../models/user");
 
-const {HttpError, sendEmail} = require("../../helpers");
-
-const {BASE_URL} = process.env;
+const {HttpError} = require("../../helpers");
 
 const register = async(req, res)=> {
     const {email, password} = req.body;
@@ -25,8 +23,9 @@ const register = async(req, res)=> {
 
     res.status(201).json({
         user:{
+            name: newUser.name,
             email: newUser.email,
-            subscription: newUser.subscription,
+           
         }
     })
 }
