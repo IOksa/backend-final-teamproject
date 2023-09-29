@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
-// const tasksRouter= require ('.routes/api/tasks');
+const tasksRouter = require("./routes/api/tasks");
 const reviewsRouter = require("./routes/api/reviews");
 
 const app = express();
@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 
-// app.use("/tasks", tasksRouter);
+app.use("/tasks", tasksRouter);
 app.use("/reviews", reviewsRouter);
 
 app.use((req, res) => {
