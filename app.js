@@ -1,7 +1,10 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const bodyParser = require('body-parser');
 require("dotenv").config();
+
+
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
@@ -17,6 +20,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use("/users", userRouter);
 app.use("/auth", authRouter)

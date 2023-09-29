@@ -60,7 +60,7 @@ const userSchema = new Schema({
     },
     avatarURL: {
         type: String,
-        required: true,
+
     },
    
 }, {versionKey: false, timestamps: true});
@@ -107,10 +107,6 @@ const loginSchema = Joi.object({
 })
 
 
-const updateSubscriptionSchema = Joi.object({
-    subscription: Joi.string().valid("starter", "pro", "business").required(),
-})
-
 const updateUserSchema=Joi.object({
     name: Joi.string().min(2).max(255).messages({
         'string.base': '"name" should be a type of "string"',
@@ -123,20 +119,20 @@ const updateUserSchema=Joi.object({
         'string.empty': '"email" cannot be an empty field',
         'any.required': 'missing required email field'
     }), 
-    birthday: Joi.date().min('1-1-1900').max('now').messages({
-        'string.pattern.base':'birthday must be a date with only numbers and /',}),
+    birthday: Joi.date().min('1-1-1900').max('now'),
     phone: Joi.string().pattern(phoneRegexp).min(18).max(18).messages({
         'any.only': 'phone must be 18 symbols',
         'string.pattern.base': 'phone must be a string with only numbers, (,) and spaces',
     }),
     skype:Joi.string(),
+
 })
 
 const schemas = {
     registerSchema,
     loginSchema,
     updateUserSchema,
-    updateSubscriptionSchema,
+
 }
 
 const User = model("user", userSchema);

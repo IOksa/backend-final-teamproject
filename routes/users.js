@@ -2,7 +2,7 @@ const express = require("express");
 
 const ctrl = require("../controllers/users");
 
-const {validateBody, authenticate, upload} = require("../middlewares");
+const {validateBody, authenticate, uploadCloud, validateFormData} = require("../middlewares");
 
 const {schemas} = require("../models/user");
 
@@ -10,10 +10,8 @@ const router = express.Router();
 
 router.get("/current", authenticate, ctrl.getCurrent);
 
-// router.patch("/", authenticate, validateBody(schemas.updateSubscriptionSchema), ctrl.updateSubscription);
+// router.patch("/edit", authenticate, validateBody(schemas.updateUserSchema), ctrl.updateUser);
 
-// router.patch("/avatars", authenticate, upload.single("avatar"), ctrl.updateAvatar);
-
-router.patch("/edit", authenticate, validateBody(schemas.updateUserSchema), ctrl.updateUser);
+router.patch("/edit", authenticate, validateFormData(schemas.updateUserSchema), uploadCloud.single("image"), ctrl.updateUser);
 
 module.exports = router;
