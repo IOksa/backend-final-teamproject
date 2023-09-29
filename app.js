@@ -1,11 +1,13 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 require("dotenv").config();
 
-const authRouter = require("./routes/users");
-const tasksRouter = require("./routes/api/tasks");
-// const reviewsRouter= require ('.routes/api/reviews');
+const authRouter = require("./routes/auth");
+const userRouter = require("./routes/users");
+// const tasksRouter= require ('.routes/api/tasks');
+const reviewsRouter = require("./routes/api/reviews");
 
 const app = express();
 
@@ -16,9 +18,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-app.use("/users", authRouter);
-app.use("/tasks", tasksRouter);
-// app.use("/reviews", reviewsRouter);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/users", userRouter);
+app.use("/auth", authRouter);
+
+// app.use("/tasks", tasksRouter);
+app.use("/reviews", reviewsRouter);
 
 app.use((req, res) => {
     res.status(404).json({ message: "Not found" });

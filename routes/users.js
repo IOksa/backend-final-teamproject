@@ -2,24 +2,16 @@ const express = require("express");
 
 const ctrl = require("../controllers/users");
 
-const {validateBody, authenticate, upload} = require("../middlewares");
+const {validateBody, authenticate, uploadCloud, validateFormData} = require("../middlewares");
 
 const {schemas} = require("../models/user");
 
 const router = express.Router();
 
-// signup
-router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
-
-// signin
-router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
-
 router.get("/current", authenticate, ctrl.getCurrent);
 
-router.post("/logout", authenticate, ctrl.logout);
+// router.patch("/edit", authenticate, validateBody(schemas.updateUserSchema), ctrl.updateUser);
 
-router.patch("/", authenticate, validateBody(schemas.updateSubscriptionSchema), ctrl.updateSubscription);
-
-router.patch("/avatars", authenticate, upload.single("avatar"), ctrl.updateAvatar);
+router.patch("/edit", authenticate, validateFormData(schemas.updateUserSchema), uploadCloud.single("image"), ctrl.updateUser);
 
 module.exports = router;
