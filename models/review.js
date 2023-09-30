@@ -37,7 +37,7 @@ const reviewValidateSchema = Joi.object({
     .required()
     .messages({
       "number.base": "rating must be a type of number",
-      "number.empty": "rating cannot be an empty field",
+      "string.empty": "rating cannot be an empty field",
       "any.required": "missing required rating field",
       "any.only": "rating must be one of next types: 1, 2, 3, 4, 5",
     }),
