@@ -10,8 +10,8 @@ const router = express.Router();
 
 router.get("/current", authenticate, ctrl.getCurrent);
 
-router.patch("/edit", authenticate, validateBody(schemas.updateUserSchema), uploadCloud.single("image"),ctrl.updateUser);
+// router.patch("/edit", authenticate, validateBody(schemas.updateUserSchema), uploadCloud.single("image"),ctrl.updateUser);
 
-// router.patch("/edit", authenticate, validateFormData(schemas.updateUserSchema), uploadCloud.single("image"), ctrl.updateUser);
+router.patch("/edit", authenticate, validateFormData(schemas.updateUserSchema), uploadCloud.single("image"), ctrl.updateUser);
 
 module.exports = router;

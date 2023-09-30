@@ -13,6 +13,7 @@ const validateFormData = schema => {
         // else{
            
             const { error } = schema.validate(req.body);
+            console.log(error);
             if (error) {
                 next(HttpError(400, error.message));
                 
