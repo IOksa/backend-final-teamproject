@@ -11,14 +11,18 @@ const updateUser = async(req, res)=>{
 
    
     console.log("update user")
+    console.log("req.body=", req.body);
 
     const reqKeyes=Object.keys(req);
     const isReqFile = reqKeyes.includes('file');
     
     if(isReqFile){
         console.log("req.file.path=", req.file.path);
+        
         const avatarURL =req.file.path;
         const updates = {...req.body, avatarURL};
+        
+        console.log("updates=", updates);
         
         result = await User.findByIdAndUpdate(_id, {$set: updates},{new: true});
     }
