@@ -62,6 +62,11 @@ const userSchema = new Schema({
         type: String,
 
     },
+
+    cloudinaryId: {
+        type: String,
+    },
+
    
 }, {versionKey: false, timestamps: true});
 

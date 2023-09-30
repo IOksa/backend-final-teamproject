@@ -1,9 +1,13 @@
 const {HttpError} = require("../helpers");
+const multer = require("multer");
+
 const isEmpty = require('lodash.isempty');
 
 const validateFormData = schema => {
+
     
     const func = (req, res, next)=> {
+        multer.none();
       
        console.log("validateFormData");
        console.log("req.body=", req.body);
