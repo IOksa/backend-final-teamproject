@@ -4,7 +4,7 @@ const isEmpty = require('lodash.isempty');
 const validateBody = schema => {
     
     const func = (req, res, next)=> {
-       
+       console.log("req=", req);
         if(isEmpty(req.body)){  
             if(req.method==='PATCH'){
                 const field=req.route.path.slice(5);
