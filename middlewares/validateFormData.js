@@ -1,32 +1,34 @@
 const {HttpError} = require("../helpers");
-const multer = require("multer");
-
 const isEmpty = require('lodash.isempty');
+const path = require("path");
 
 const validateFormData = schema => {
 
-    
     const func = (req, res, next)=> {
-        multer.none();
-      
        console.log("validateFormData");
-       console.log("req.body=", req.body);
-        // if(isEmpty(req.body)){  
-        //     next(HttpError(400, 'missing fields'));
-        // }
-        // else{
-           
-            const { error } = schema.validate(req.body);
-            console.log(error);
-            if (error) {
-                next(HttpError(400, error.message));
-                
+         if(isEmpty(req.body) && isEmpty(req.files)){  
+            next(HttpError(400, 'missing fields'));
+         }
+         else{
+            console.log("req.body", req.body);
+             const { error } = schema.validate(req.body);
+             if (error) {
+                 next(HttpError(400, error.message));
+                 
+             }
+             console.log('req.files=', req.files)
+     
+             if(!isEmpty(req.files)){
+                const ext = path.extname(req.files.image[0].originalname).toLowerCase();
+                if (ext !== ".jpg" && ext !== ".jpeg" && ext !== ".png") {
+                    next(HttpError(400, "File type is not supported, must be jpg, jpeg or png"));
+                }
             }
             next();
-        // }
-    }
-
-    return func;
+         }
+     }
+ 
+     return func;
 }
 
 module.exports = validateFormData;

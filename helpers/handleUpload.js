@@ -12,6 +12,7 @@ const res = await cloudinary.uploader.upload(file, {
     folder: "avatars",
     resource_type: "auto",
 });
+
 return res;
 }
 
