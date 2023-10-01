@@ -1,20 +1,12 @@
 const {Schema, model} = require("mongoose");
-// const addLeadingZero = require('../helpers/addLeadingZero');
 const Joi = require("joi");
-
 const {handleMongooseError} = require("../helpers");
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const phoneRegexp = /^\d{2}\s\(\d{3}\)\s\d{3}\s\d{2}\s\d{2}/;
 
-// const dateRegexp = /^\d{2}\/\d{2}\/\d{2}/;
-
 const currentTime = new Date();
-// console.log("currentTime=", currentTime);
-// const month=addLeadingZero(currentTime.getMonth());
-// const day=addLeadingZero(currentTime.getDate());
-// const currentDate=`{${currentTime.getFullYear()}-${month}-${day}}`;
 
 const userSchema = new Schema({
     name: {
