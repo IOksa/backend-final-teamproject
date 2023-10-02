@@ -3,19 +3,21 @@ const ctrl = require("../../controllers/tasks");
 
 const router = express.Router();
 
-const { validateBody, isValidId, authenticate } = require("../../middlewares");
+const {
+    validateBody,
+    isValidId,
+    authenticate,
+    isValidTime,
+} = require("../../middlewares");
 const { schemas } = require("../../models/task");
 
-router.get(
-    "/",
-    // authenticate,
-    ctrl.getListTasks
-);
+router.get("/", authenticate, ctrl.getListTasks);
 
 router.post(
     "/",
-    // authenticate,
+    authenticate,
     // validateBody(schemas.addContactSchema),
+    isValidTime,
     ctrl.addTask
 );
 
@@ -27,6 +29,6 @@ router.patch(
     ctrl.updateTask
 );
 
-router.delete("/:id", ctrl.deleteTask);
+router.delete("/:id", authenticate, ctrl.deleteTask);
 
 module.exports = router;

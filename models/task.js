@@ -39,6 +39,7 @@ const taskSchema = new Schema(
         owner: {
             type: Schema.Types.ObjectId,
             ref: "user",
+            require: true,
         },
     },
     { versionKey: false, timestamps: true }
@@ -47,21 +48,27 @@ const taskSchema = new Schema(
 taskSchema.post("save", handleMongooseError);
 
 const addTaskSchema = Joi.object({
-    title: Joi.string().required().messages({
+    title: Joi.string().required().max(250).messages({
         "any.required": "missing required title field",
     }),
-    start: Joi.string().required().messages({
-        "any.required": "missing required start field",
-    }),
-    end: Joi.string().required().messages({
-        "any.required": "missing required end field",
-    }),
+    start: Joi.string().pattern(/^([0-9]{2})\:([0-9]{2})$/),
+    // Joi.date().pattern(/^([0-9]{2})\:([0-9]{2})$/),
+    // Joi.string().required().messages({
+    // "any.required": "missing required start field",}),
+    end: Joi.string().pattern(/^([0-9]{2})\:([0-9]{2})$/),
+    // Joi.string().required().messages({
+    // "any.required": "missing required end field",}),
     priority: Joi.string().required().messages({
         "any.required": "missing required priority field",
     }),
-    // date: Joi.date().required().message({
-    //     "any.required": "missing required date field",
-    // }),
+    date: Joi.string()
+        .pattern(
+            /^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/
+        )
+        .required(),
+    // .validate("YYYY-MM-DD"),
+    // .message({
+    // "any.required": "missing required date field",}),
     category: Joi.string().required().messages({
         "any.required": "missing required category field",
     }),

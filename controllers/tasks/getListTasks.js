@@ -5,15 +5,15 @@ const getListTasks = async (req, res) => {
 
     // console.log(req);
     const date = new Date(req.query.date);
-    console.log(date);
+    // console.log(date);
     const searchYear = date.getFullYear();
-    console.log("year", searchYear);
+    // console.log("year", searchYear);
     const searchMonth = date.getMonth() + 1;
-    console.log("month", searchMonth);
+    // console.log("month", searchMonth);
     const searchDate = date.getDate();
-    console.log("nunmber", searchDate);
+    // console.log("nunmber", searchDate);
     const { period } = req.query;
-    console.log("period", period);
+    // console.log("period", period);
     // const dateList = new Date(req.params);
     // const monthFind = 11;
     //     Task.aggregate([
@@ -35,7 +35,11 @@ const getListTasks = async (req, res) => {
     // console.log(monthFind);
     // searchMonth > 12 ? 1 : searchMonth + 1;ґ
 
+    const { _id: owner } = req.user;
+    console.log("owner", owner);
+
     const listTasks = await Task.find({
+        owner,
         date: {
             $gte: new Date(
                 `${searchYear}-${searchMonth}-${
