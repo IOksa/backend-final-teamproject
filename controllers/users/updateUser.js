@@ -1,26 +1,35 @@
+const cloudinary = require("cloudinary").v2;
+const isEmpty = require('lodash.isempty');
 const {User} = require("../../models/user");
-// const cloudinary = require("./cloudinary");
-// const uploader = require("./multer");
 
-const { HttpError } = require("../../helpers");
+const { HttpError, handleUpload } = require("../../helpers");
 
 const updateUser = async(req, res)=>{
     const {_id} = req.user;
     let result;
-    // const upload = await cloudinary.v2.uploader.upload(req.file.path);
-
-   
     console.log("update user")
+    console.log("req.body=", req.body);
+    console.log("req.files=", req.files);
+    if(!isEmpty(req.files)){       
+        const b64 = Buffer.from(req.files.image[0].buffer).toString("base64");
+        const dataURI = "data:" + req.files.image[0].mimetype + ";base64," + b64;
+        const cldRes = await handleUpload(dataURI);
+        console.log("cldRes=", cldRes);
 
-    const reqKeyes=Object.keys(req);
-    const isReqFile = reqKeyes.includes('file');
-    
-    if(isReqFile){
-        console.log("req.file.path=", req.file.path);
-        const avatarURL =req.file.path;
-        const updates = {...req.body, avatarURL};
-        
+        const cloudinaryId=cldRes.public_id;
+        const avatarURL =cldRes.secure_url;
+        const updates = {...req.body, avatarURL, cloudinaryId};
+
+        console.log("avatarURL=", avatarURL);
+        console.log("updates=", updates);
+
+        if(req.user.cloudinaryId){
+            await cloudinary.uploader.destroy(req.user.cloudinaryId);
+            
+        }
         result = await User.findByIdAndUpdate(_id, {$set: updates},{new: true});
+    
+    
     }
     else{
         result = await User.findByIdAndUpdate(_id, req.body,{new: true});

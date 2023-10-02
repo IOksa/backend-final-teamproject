@@ -1,12 +1,14 @@
 const HttpError = require("./HttpError");
 const ctrlWrapper = require("./ctrlWrapper");
 const handleMongooseError = require("./handleMongooseError");
-const addLeadingZero = require("./addLeadingZero");
+const handleUpload = require("./handleUpload");
+
 
 module.exports = {
     HttpError,
     ctrlWrapper,
     handleMongooseError,
-    addLeadingZero,
+    handleUpload,
+
 
 }
