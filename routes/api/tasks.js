@@ -5,7 +5,7 @@ const router = express.Router();
 
 const {
     validateBody,
-    isValidId,
+    // isValidId,
     authenticate,
     isValidTime,
 } = require("../../middlewares");
@@ -16,16 +16,16 @@ router.get("/", authenticate, ctrl.getListTasks);
 router.post(
     "/",
     authenticate,
-    // validateBody(schemas.addContactSchema),
+    validateBody(schemas.addContactSchema),
     isValidTime,
     ctrl.addTask
 );
 
 router.patch(
     "/:id",
-    // authenticate,
+    authenticate,
     // isValidId,
-    // validateBody(schemas.updateFavoriteSchema),
+    validateBody(schemas.updateFavoriteSchema),
     ctrl.updateTask
 );
 
