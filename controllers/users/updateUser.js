@@ -1,5 +1,4 @@
 const cloudinary = require("cloudinary").v2;
-const isEmpty = require('lodash.isempty');
 const {User} = require("../../models/user");
 
 const { HttpError, handleUpload } = require("../../helpers");
@@ -9,11 +8,13 @@ const updateUser = async(req, res)=>{
     let result;
     console.log("update user")
     console.log("req.body=", req.body);
-    console.log("req.files=", req.files);
-    if(!isEmpty(req.files)){       
-        const b64 = Buffer.from(req.files.image[0].buffer).toString("base64");
-        const dataURI = "data:" + req.files.image[0].mimetype + ";base64," + b64;
-        const cldRes = await handleUpload(dataURI);
+    console.log("req.file=", req.file);
+
+    const keyes = Object.keys(req);
+    const isFile  = keyes.includes('file');
+
+    if(isFile){   
+        const cldRes = await handleUpload(req.file.originalname);
         console.log("cldRes=", cldRes);
 
         const cloudinaryId=cldRes.public_id;
@@ -32,6 +33,7 @@ const updateUser = async(req, res)=>{
     
     }
     else{
+    
         result = await User.findByIdAndUpdate(_id, req.body,{new: true});
     }
     if(!result) {

@@ -5,15 +5,10 @@ const validateBody = schema => {
     
     const func = (req, res, next)=> {
        console.log("validateBody req.body=", req.body);
-       console.log("validateBody req.file=", req.files);
+       console.log("validateBody req.file=", req.file);
         if(isEmpty(req.body)){  
-            if(req.method==='PATCH'){
-                const field=req.route.path.slice(5);
-                next(HttpError(400, `missing field ${field}`));
-            }
-            else{
-                next(HttpError(400, 'missing fields'));
-            }
+            
+            next(HttpError(400, 'missing fields'));
         }
         else{
            
