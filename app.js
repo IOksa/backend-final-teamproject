@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
-// const tasksRouter= require ('.routes/api/tasks');
+const tasksRouter = require("./routes/api/tasks");
 const reviewsRouter = require("./routes/api/reviews");
 
 const app = express();
@@ -20,13 +20,13 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use("/users", userRouter);
-app.use("/auth", authRouter)
+app.use("/auth", authRouter);
 
-// app.use("/tasks", tasksRouter);
+app.use("/tasks", tasksRouter);
 app.use("/reviews", reviewsRouter);
 
 app.use((req, res) => {
-  res.status(404).json({ message: "Not found" });
+    res.status(404).json({ message: "Not found" });
 });
 
 app.use((err, req, res, next) => {
