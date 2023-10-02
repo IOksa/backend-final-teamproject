@@ -13,7 +13,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
         minlength: 2,
-        maxlength: 255,
+        maxlength: 100,
     },
     email: {
         type: String,
@@ -25,7 +25,7 @@ const userSchema = new Schema({
         type: String,
         required: [true, 'Set password for user'],
         minlength: 6,
-        maxlength: 255,
+        maxlength: 100,
     },
 
     birthday:{
@@ -65,22 +65,22 @@ const userSchema = new Schema({
 userSchema.post("save", handleMongooseError);
 
 const registerSchema = Joi.object({
-    name: Joi.string().min(2).max(255).required().messages({
+    name: Joi.string().min(2).max(100).required().messages({
         'string.base': '"name" should be a type of "string"',
         'string.empty': '"name" cannot be an empty field',
         'any.required': 'missing required name field',
-        'any.only': 'name must be min 2 and max 255 symbols',
+        'any.only': 'name must be min 2 and max 100 symbols',
       }),
     email: Joi.string().pattern(emailRegexp).required().messages({
         'string.base': '"email" should be a type of "string"',
         'string.empty': '"email" cannot be an empty field',
         'any.required': 'missing required email field'
       }),
-    password: Joi.string().min(6).max(255).required().messages({
+    password: Joi.string().min(6).max(100).required().messages({
         'string.base': '"password" should be a type of "string"',
         'string.empty': '"password" cannot be an empty field',
         'any.required': 'missing required password field',
-        'any.only': 'password must be min 6 and max 255 symbols',
+        'any.only': 'password must be min 6 and max 100 symbols',
       }),
       
     
@@ -92,11 +92,11 @@ const loginSchema = Joi.object({
         'string.empty': '"email" cannot be an empty field',
         'any.required': 'missing required email field'
       }),
-    password: Joi.string().min(6).max(255).required().messages({
+    password: Joi.string().min(6).max(100).required().messages({
         'string.base': '"password" should be a type of "string"',
         'string.empty': '"password" cannot be an empty field',
         'any.required': 'missing required password field',
-        'any.only': 'password must be min 6 and max 255 symbols',
+        'any.only': 'password must be min 6 and max 100 symbols',
 
       }),
   
@@ -105,11 +105,11 @@ const loginSchema = Joi.object({
 
 
 const updateUserSchema=Joi.object({
-    name: Joi.string().min(2).max(255).messages({
+    name: Joi.string().min(2).max(100).messages({
         'string.base': '"name" should be a type of "string"',
         'string.empty': '"name" cannot be an empty field',
         'any.required': 'missing required name field',
-        'any.only': 'name must be min 2 and max 255 symbols',
+        'any.only': 'name must be min 2 and max 100 symbols',
       }),
     email: Joi.string().email().lowercase().pattern(emailRegexp).messages({
         'string.base': '"email" should be a type of "string"',
@@ -118,8 +118,8 @@ const updateUserSchema=Joi.object({
     }), 
     birthday: Joi.date().min('1-1-1900').max('now'),
     phone: Joi.string().pattern(phoneRegexp).min(18).max(18).messages({
-        'any.only': 'phone must be 18 symbols',
-        'string.pattern.base': 'phone must be a string with only numbers, (,) and spaces',
+        'any.only': 'phone must be a string with format "xx (xxx) xxx xx xx" - only numbers, (,) and spaces',
+        'string.pattern.base': 'phone must be a string with format "xx (xxx) xxx xx xx" - only numbers, (,) and spaces',
     }),
     skype:Joi.string(),
 
