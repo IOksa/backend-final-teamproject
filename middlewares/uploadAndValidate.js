@@ -34,7 +34,9 @@ const upload = multer({
 
 const uploadAndValidate = (req, res, next) => {
     upload.single('image')(req, res, (err) => {
-   
+    console.log('uploadAndValidate');
+    console.log("req.body=", req.body);
+    console.log("req.file=", req.file);
       if (err) return res.status(400).send(err.message);
       
       const keyes = Object.keys(req);

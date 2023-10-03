@@ -70,12 +70,53 @@
             "content": {}
           },
           "409": {
-            "description": "Provided email already exists",
+            "description": "Email is used",
             "content": {}
           }
         }
       }
     },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Login's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (email or password is wrong)",
+            "content": {}
+          }
+        }
+      }
+    },
+
+
 
     "/reviews": {
       "get": {
@@ -307,24 +348,128 @@
     }
   },
 
-  "components": {
-    "responses": {
-      "UnauthorizedError": {
-        "description": "Not authorized"
-      },
-      "NotFoundError": {
-        "description": "Not found"
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
+  "components": { 
     "schemas": {
-      "Reviews": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name":{
+            "type": "string",
+            "description": "User's name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "user":{
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name"
+                
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              }
+            }
+          }
+        },
+        "example": {
+          "user":{
+            "name": "user1",
+            "email": "user1@gmail.com" 
+          }
+        }
+      },
+
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token"
+          },
+          "user":{
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name"
+                
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar URL"
+               
+              }
+            }
+          }
+        },
+        "example": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MWM1NzA0NjlkYzZjNWRlZTljMjExYiIsImlhdCI6MTY5NjM1NjkwNCwiZXhwIjoxNjk2NDM5NzA0fQ.YU-8MNeL7iVgMR-biOM_AluJ3C3uSd_au68MopLkSHY",
+          "user":{
+            "name": "user1",
+            "email": "user1@gmail.com",
+            "avatarURL": "//www.gravatar.com/avatar/58090ea9184cf410bac8ee57bc5f985f"
+          }
+        }
+      },
+
+      "LogoutRequest": {
+        "type": "object",
+        
+        "properties": {
+          
+        }
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {
+          
+          
+        },
+        "example": {}
+        
+      },
+
+
+      "ReviewsRequest": {
         "type": "array",
         "items": {
           "type": "object",
@@ -363,8 +508,27 @@
               "type": "string",
               "format": "date-time"
             }
+      
+          
           }
         }
+      }
+    },
+
+    
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Not authorized"
+      },
+      "NotFoundError": {
+        "description": "Not found"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

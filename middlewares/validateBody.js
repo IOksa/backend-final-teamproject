@@ -4,8 +4,7 @@ const isEmpty = require('lodash.isempty');
 const validateBody = schema => {
     
     const func = (req, res, next)=> {
-       console.log("validateBody req.body=", req.body);
-       console.log("validateBody req.file=", req.file);
+
         if(isEmpty(req.body)){  
             
             next(HttpError(400, 'missing fields'));
