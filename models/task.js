@@ -51,11 +51,15 @@ const addTaskSchema = Joi.object({
     title: Joi.string().required().max(250).messages({
         "any.required": "missing required title field",
     }),
-    start: Joi.string().pattern(/^([0-9]{2})\:([0-9]{2})$/),
+    start: Joi.string()
+        .required()
+        .pattern(/^([0-9]{2})\:([0-9]{2})$/),
     // Joi.date().pattern(/^([0-9]{2})\:([0-9]{2})$/),
     // Joi.string().required().messages({
     // "any.required": "missing required start field",}),
-    end: Joi.string().pattern(/^([0-9]{2})\:([0-9]{2})$/),
+    end: Joi.string()
+        .required()
+        .pattern(/^([0-9]{2})\:([0-9]{2})$/),
     // Joi.string().required().messages({
     // "any.required": "missing required end field",}),
     priority: Joi.string().required().messages({
@@ -74,8 +78,40 @@ const addTaskSchema = Joi.object({
     }),
 });
 
+const editingTaskSchema = Joi.object({
+    title: Joi.string()
+        // .required()
+        .max(250)
+        .messages({
+            "any.required": "missing required title field",
+        }),
+    start: Joi.string().pattern(/^([0-9]{2})\:([0-9]{2})$/),
+    // Joi.date().pattern(/^([0-9]{2})\:([0-9]{2})$/),
+    // Joi.string().required().messages({
+    // "any.required": "missing required start field",}),
+    end: Joi.string().pattern(/^([0-9]{2})\:([0-9]{2})$/),
+    // Joi.string().required().messages({
+    // "any.required": "missing required end field",}),
+    priority: Joi.string()
+        // .required()
+        .messages({
+            "any.required": "missing required priority field",
+        }),
+    date: Joi.string().pattern(
+        /^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/
+    ),
+    // .required()
+    // .validate("YYYY-MM-DD"),
+    // .message({
+    // "any.required": "missing required date field",}),
+    category: Joi.string().required().messages({
+        "any.required": "missing required category field",
+    }),
+});
+
 const schemas = {
     addTaskSchema,
+    editingTaskSchema,
 };
 
 const Task = model("task", taskSchema);

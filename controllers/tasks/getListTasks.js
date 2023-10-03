@@ -62,7 +62,7 @@ const getListTasks = async (req, res) => {
         },
     });
 
-    res.json(listTasks);
+    res.status(200).json(listTasks);
 };
 
 module.exports = getListTasks;
