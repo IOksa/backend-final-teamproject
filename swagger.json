@@ -15,9 +15,7 @@
     {
       "description": "GooseTrack Backend URL",
       "url": "https://backend-goosetrack.onrender.com"
-      
-      }
-    
+    }
   ],
   "tags": [
     {
@@ -37,8 +35,6 @@
       "description": "Reviews endpoints"
     }
   ],
-
-
 
   "paths": {
     "/auth/register": {
@@ -81,13 +77,31 @@
       }
     },
 
-
     "/reviews": {
       "get": {
-        "tags": [
-          "Reviews"
-        ],
+        "tags": ["Reviews"],
         "description": "Returns all reviews",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The number of page to return",
+            "default": "1"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of items to return",
+            "default": "20"
+          }
+        ],
+
         "responses": {
           "200": {
             "description": "All the reviews",
@@ -104,9 +118,7 @@
     },
     "/reviews/own": {
       "get": {
-        "tags": [
-          "Reviews"
-        ],
+        "tags": ["Reviews"],
         "description": "Returns user`s own review",
         "security": [
           {
@@ -144,9 +156,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Reviews"
-        ],
+        "tags": ["Reviews"],
         "description": "Add user`s own review",
         "security": [
           {
@@ -205,9 +215,7 @@
         }
       },
       "patch": {
-        "tags": [
-          "Reviews"
-        ],
+        "tags": ["Reviews"],
         "description": "Edit user`s own review",
         "security": [
           {
@@ -266,9 +274,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Reviews"
-        ],
+        "tags": ["Reviews"],
         "description": "Delete user`s own review",
         "security": [
           {
@@ -301,15 +307,13 @@
     }
   },
 
-
-  
   "components": {
     "responses": {
       "UnauthorizedError": {
         "description": "Not authorized"
       },
       "NotFoundError": {
-        "description": "User doesn`t have any review"
+        "description": "Not found"
       }
     },
     "securitySchemes": {
@@ -341,6 +345,11 @@
             "name": {
               "type": "string",
               "example": "Nik"
+            },
+            "avatarURL": {
+              "type": "string",
+              "format": "url",
+              "example": "//www.gravatar.com/avatar/871f5ba6e066b8cd0c480e27eb454011"
             },
             "createdAt": {
               "type": "string",
