@@ -333,6 +333,10 @@
               "type": "string",
               "example": "651578edcb9480926aadc04f"
             },
+            "owner": {
+              "type": "string",
+              "example": "651c23a451ec45f710617d5c"
+            },
             "rating": {
               "type": "integer",
               "format": "int32",
