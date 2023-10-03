@@ -1,727 +1,535 @@
 {
-    "openapi": "3.1.0",
-    "info": {
-        "version": "1.0.0",
-        "title": "GooseTrack API",
-        "description": "The API for the GooseTrack project",
-        "license": {
-            "name": "MIT",
-            "url": "https://opensource.org/licenses/MIT"
-        }
-    },
-    "consumes": ["application/json", "multipart/form-data"],
-    "produces": ["application/json"],
-    "servers": [
-        {
-            "description": "GooseTrack Backend URL",
-            "url": "https://backend-goosetrack.onrender.com"
-        },
-        { "url": "http://localhost:3000" }
-    ],
-    "tags": [
-        {
-            "name": "Auth",
-            "description": "Authorization endpoints"
-        },
-        {
-            "name": "User",
-            "description": "User`s information endpoints"
-        },
-        {
-            "name": "Tasks",
-            "description": "Tasks endpoints"
-        },
-        {
-            "name": "Reviews",
-            "description": "Reviews endpoints"
-        }
-    ],
-    "openapi": "3.1.0",
-    "info": {
-        "version": "1.0.0",
-        "title": "GooseTrack API",
-        "description": "The API for the GooseTrack project",
-        "license": {
-            "name": "MIT",
-            "url": "https://opensource.org/licenses/MIT"
-        }
-    },
-    "consumes": ["application/json", "multipart/form-data"],
-    "produces": ["application/json"],
-    "servers": [
-        {
-            "description": "GooseTrack Backend URL",
-            "url": "https://backend-goosetrack.onrender.com"
-        }
-    ],
-    "tags": [
-        {
-            "name": "Auth",
-            "description": "Authorization endpoints"
-        },
-        {
-            "name": "User",
-            "description": "User`s information endpoints"
-        },
-        {
-            "name": "Tasks",
-            "description": "Tasks endpoints"
-        },
-        {
-            "name": "Reviews",
-            "description": "Reviews endpoints"
-        }
-    ],
-
-    "paths": {
-        "/auth/register": {
-            "post": {
-                "tags": ["Auth"],
-                "summary": "User registration",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-                "requestBody": {
-                    "description": "Registration's object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RegistrationRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/RegistrationResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request (invalid request body)",
-                        "content": {}
-                    },
-                    "409": {
-                        "description": "Provided email already exists",
-                        "content": {}
-                    }
-                }
-            }
-        },
-
-        "/reviews": {
-            "get": {
-                "tags": ["Reviews"],
-                "description": "Returns all reviews",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "page",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "description": "The number of page to return",
-                        "default": "1"
-                    },
-                    {
-                        "in": "query",
-                        "name": "limit",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "description": "The numbers of items to return",
-                        "default": "20"
-                    }
-                ],
-
-                "responses": {
-                    "200": {
-                        "description": "All the reviews",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Reviews"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/reviews/own": {
-            "get": {
-                "tags": ["Reviews"],
-                "description": "Returns user`s own review",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "description": "The JWT token issued to the current user.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User`s own review",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Reviews"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/UnauthorizedError"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFoundError"
-                    }
-                }
-            },
-            "post": {
-                "tags": ["Reviews"],
-                "description": "Add user`s own review",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "description": "The JWT token issued to the current user.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "rating": {
-                                        "type": "integer",
-                                        "format": "int32",
-                                        "example": 5
-                                    },
-                                    "comment": {
-                                        "type": "string",
-                                        "example": "Good app!"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "User`s own review",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Reviews"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/UnauthorizedError"
-                    },
-                    "409": {
-                        "description": "User has already added a review."
-                    }
-                }
-            },
-            "patch": {
-                "tags": ["Reviews"],
-                "description": "Edit user`s own review",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "description": "The JWT token issued to the current user.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "rating": {
-                                        "type": "integer",
-                                        "format": "int32",
-                                        "example": 5
-                                    },
-                                    "comment": {
-                                        "type": "string",
-                                        "example": "Good app!"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "User`s own review",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Reviews"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/UnauthorizedError"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFoundError"
-                    }
-                }
-            },
-            "delete": {
-                "tags": ["Reviews"],
-                "description": "Delete user`s own review",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "description": "The JWT token issued to the current user.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Review deleted"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/UnauthorizedError"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFoundError"
-                    }
-                }
-            }
-        }
-    },
-    "paths": {
-        "/auth/register": {
-            "post": {
-                "tags": ["Auth"],
-                "summary": "User registration",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-                "requestBody": {
-                    "description": "Registration's object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RegistrationRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/RegistrationResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request (invalid request body)",
-                        "content": {}
-                    },
-                    "409": {
-                        "description": "Provided email already exists",
-                        "content": {}
-                    }
-                }
-            }
-        },
-
-        "/tasks": {
-            "get": {
-                "tags": ["Tasks"],
-                "description": "Returns all customer tasks for the month",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "description": "The JWT token issued to the customer.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "date",
-                        "in": "query",
-                        "required": true,
-                        "description": "Returns all customer tasks for the month",
-                        "schema": { "type": "string" }
-                    },
-                    {
-                        "name": "period",
-                        "in": "query",
-                        "required": false,
-                        "description": "Returns all customer tasks for the day",
-                        "schema": { "type": "string" }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns all customer tasks for the month"
-                    }
-                }
-            },
-            "post": {
-                "tags": ["Tasks"],
-                "description": "Add the customer's task",
-                "security": [{ "Bearer": [] }],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "description": "The JWT token issued to the current user.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Add the customer's task",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Tasks"
-                            }
-                        }
-                    }
-                }
-            },
-            "patch": { "tags": ["Tasks"] },
-            "delete": { "tags": ["Tasks"] }
-        },
-        "/reviews": {
-            "get": {
-                "tags": ["Reviews"],
-                "description": "Returns all reviews",
-                "responses": {
-                    "200": {
-                        "description": "All the reviews",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Reviews"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/reviews/own": {
-            "get": {
-                "tags": ["Reviews"],
-                "description": "Returns user`s own review",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "description": "The JWT token issued to the current user.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User`s own review",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Reviews"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/UnauthorizedError"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFoundError"
-                    }
-                }
-            },
-            "post": {
-                "tags": ["Reviews"],
-                "description": "Add user`s own review",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "description": "The JWT token issued to the current user.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "rating": {
-                                        "type": "integer",
-                                        "format": "int32",
-                                        "example": 5
-                                    },
-                                    "comment": {
-                                        "type": "string",
-                                        "example": "Good app!"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "User`s own review",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Reviews"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/UnauthorizedError"
-                    },
-                    "409": {
-                        "description": "User has already added a review."
-                    }
-                }
-            },
-            "patch": {
-                "tags": ["Reviews"],
-                "description": "Edit user`s own review",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "description": "The JWT token issued to the current user.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "rating": {
-                                        "type": "integer",
-                                        "format": "int32",
-                                        "example": 5
-                                    },
-                                    "comment": {
-                                        "type": "string",
-                                        "example": "Good app!"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "User`s own review",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Reviews"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/UnauthorizedError"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFoundError"
-                    }
-                }
-            },
-            "delete": {
-                "tags": ["Reviews"],
-                "description": "Delete user`s own review",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "description": "The JWT token issued to the current user.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Review deleted"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/UnauthorizedError"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFoundError"
-                    }
-                }
-            }
-        }
-    },
-
-    "components": {
-        "responses": {
-            "UnauthorizedError": {
-                "description": "Not authorized"
-            },
-            "NotFoundError": {
-                "description": "Not found"
-            }
-        },
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
-        },
-        "schemas": {
-            "Reviews": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "_id": {
-                            "type": "string",
-                            "example": "651578edcb9480926aadc04f"
-                        },
-                        "owner": {
-                            "type": "string",
-                            "example": "651c23a451ec45f710617d5c"
-                        },
-                        "rating": {
-                            "type": "integer",
-                            "format": "int32",
-                            "example": 5
-                        },
-                        "comment": {
-                            "type": "string",
-                            "example": "Good app!"
-                        },
-                        "name": {
-                            "type": "string",
-                            "example": "Nik"
-                        },
-                        "avatarURL": {
-                            "type": "string",
-                            "format": "url",
-                            "example": "//www.gravatar.com/avatar/871f5ba6e066b8cd0c480e27eb454011"
-                        },
-                        "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                        },
-                        "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
-                        }
-                    }
-                }
-            }
-        }
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "GooseTrack API",
+    "description": "The API for the GooseTrack project",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
     }
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json"],
+  "servers": [
+    {
+      "description": "GooseTrack Backend URL",
+      "url": "https://backend-goosetrack.onrender.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User`s information endpoints"
+    },
+    {
+      "name": "Tasks",
+      "description": "Tasks endpoints"
+    },
+    {
+      "name": "Reviews",
+      "description": "Reviews endpoints"
+    }
+  ],
+
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Email is used",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Login's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (email or password is wrong)",
+            "content": {}
+          }
+        }
+      }
+    },
+
+
+
+    "/reviews": {
+      "get": {
+        "tags": ["Reviews"],
+        "description": "Returns all reviews",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The number of page to return",
+            "default": "1"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of items to return",
+            "default": "20"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "All the reviews",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reviews"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/own": {
+      "get": {
+        "tags": ["Reviews"],
+        "description": "Returns user`s own review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The JWT token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User`s own review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reviews"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Reviews"],
+        "description": "Add user`s own review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The JWT token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rating": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 5
+                  },
+                  "comment": {
+                    "type": "string",
+                    "example": "Good app!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User`s own review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reviews"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "description": "User has already added a review."
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Reviews"],
+        "description": "Edit user`s own review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The JWT token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rating": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 5
+                  },
+                  "comment": {
+                    "type": "string",
+                    "example": "Good app!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User`s own review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reviews"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Reviews"],
+        "description": "Delete user`s own review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The JWT token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      }
+    }
+  },
+
+  "components": { 
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name":{
+            "type": "string",
+            "description": "User's name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "user":{
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name"
+                
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              }
+            }
+          }
+        },
+        "example": {
+          "user":{
+            "name": "user1",
+            "email": "user1@gmail.com" 
+          }
+        }
+      },
+
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token"
+          },
+          "user":{
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name"
+                
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar URL"
+               
+              }
+            }
+          }
+        },
+        "example": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MWM1NzA0NjlkYzZjNWRlZTljMjExYiIsImlhdCI6MTY5NjM1NjkwNCwiZXhwIjoxNjk2NDM5NzA0fQ.YU-8MNeL7iVgMR-biOM_AluJ3C3uSd_au68MopLkSHY",
+          "user":{
+            "name": "user1",
+            "email": "user1@gmail.com",
+            "avatarURL": "//www.gravatar.com/avatar/58090ea9184cf410bac8ee57bc5f985f"
+          }
+        }
+      },
+
+      "LogoutRequest": {
+        "type": "object",
+        
+        "properties": {
+          
+        }
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {
+          
+          
+        },
+        "example": {}
+        
+      },
+
+
+      "ReviewsRequest": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "example": "651578edcb9480926aadc04f"
+            },
+            "owner": {
+              "type": "string",
+              "example": "651c23a451ec45f710617d5c"
+            },
+            "rating": {
+              "type": "integer",
+              "format": "int32",
+              "example": 5
+            },
+            "comment": {
+              "type": "string",
+              "example": "Good app!"
+            },
+            "name": {
+              "type": "string",
+              "example": "Nik"
+            },
+            "avatarURL": {
+              "type": "string",
+              "format": "url",
+              "example": "//www.gravatar.com/avatar/871f5ba6e066b8cd0c480e27eb454011"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+      
+          
+          }
+        }
+      }
+    },
+
+    
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Not authorized"
+      },
+      "NotFoundError": {
+        "description": "Not found"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
 }
