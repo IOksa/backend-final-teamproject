@@ -23,6 +23,9 @@ const reviewSchema = new Schema(
     name: {
       type: String,
     },
+    avatarURL: {
+      type: String,
+    },
   },
   { versionKey: false, timestamps: true }
 );
