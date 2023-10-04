@@ -190,11 +190,12 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Tasks"
+                                "$ref": "#/components/schemas/TasksRequest"
                             }
                         }
                     }
-                }
+                },
+                "responses": {}
             },
             "patch": { "tags": ["Tasks"] },
             "delete": { "tags": ["Tasks"] }
