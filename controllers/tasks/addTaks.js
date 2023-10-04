@@ -28,7 +28,7 @@ const addTask = async (req, res) => {
     //  }
 
     const task = await Task.create({ ...req.body, owner });
-    res.json(task);
+    res.status(201).json(task);
 };
 
 module.exports = addTask;

@@ -156,23 +156,26 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/TaskResponse"
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TaskResponse"
+                                    }
                                 }
                             }
-                        },
-                        "401": {
-                            "$ref": "#/components/responses/UnauthorizedError"
-                        },
-                        "404": {
-                            "$ref": "#/components/responses/NotFoundError"
                         }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
                     }
                 }
             },
             "post": {
                 "tags": ["Tasks"],
                 "description": "Add the customer's task",
-                "security": [{ "Bearer": [] }],
+                "security": [{ "bearerAuth": [] }],
                 "parameters": [
                     {
                         "name": "Authorization",
@@ -195,12 +198,127 @@
                         }
                     }
                 },
-                "responses": {}
+                "responses": {
+                    "201": {
+                        "description": "Task was successfully added",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
             },
-            "patch": { "tags": ["Tasks"] },
-            "delete": { "tags": ["Tasks"] }
+            "patch": {
+                "tags": ["Tasks"],
+                "description": "Edit user`s own review",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "description": "The JWT token issued to the current user.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "required": true,
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Task ID."
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TasksRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The task was successfully updated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Tasks"],
+                "description": "Delete customer's task",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "description": "The JWT token issued to the current user.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "required": true,
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Task ID."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The task was successfully deleted."
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    }
+                }
+            }
         },
-
         "/reviews": {
             "get": {
                 "tags": ["Reviews"],
@@ -617,50 +735,47 @@
                 }
             },
             "TaskResponse": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "_id": {
-                            "type": "string",
-                            "example": "651aee4e068ae28a70d2b8a0"
-                        },
-                        "title": {
-                            "type": "string",
-                            "expample": "My new task"
-                        },
-                        "start": {
-                            "type": "string",
-                            "example": "9:00"
-                        },
-                        "end": {
-                            "type": "string",
-                            "example": "9:30"
-                        },
-                        "prioity": {
-                            "type": "string",
-                            "example": " low | medium | high "
-                        },
-                        "date": {
-                            "type": "string",
-                            "format": "date-time"
-                        },
-                        "category": {
-                            "type": "string",
-                            "example": "to-do | in-progress | done"
-                        },
-                        "owner": {
-                            "type": "string",
-                            "example": "651aee4e068ae28a70d2b8a0"
-                        },
-                        "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                        },
-                        "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
-                        }
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "example": "651aee4e068ae28a70d2b8a0"
+                    },
+                    "title": {
+                        "type": "string",
+                        "expample": "My new task"
+                    },
+                    "start": {
+                        "type": "string",
+                        "example": "9:00"
+                    },
+                    "end": {
+                        "type": "string",
+                        "example": "9:30"
+                    },
+                    "prioity": {
+                        "type": "string",
+                        "example": " low | medium | high "
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "category": {
+                        "type": "string",
+                        "example": "to-do | in-progress | done"
+                    },
+                    "owner": {
+                        "type": "string",
+                        "example": "651aee4e068ae28a70d2b8a0"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             }
