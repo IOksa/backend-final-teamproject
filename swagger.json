@@ -66,12 +66,24 @@
             }
           },
           "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
           },
           "409": {
-            "description": "Email is used",
-            "content": {}
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorEmailAuthResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -105,18 +117,141 @@
             }
           },
           "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized (email or password is wrong)",
-            "content": {}
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorAuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+  
+    "/user/current": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Information about current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
           }
         }
       }
     },
 
-
+    "/user/edit": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Edit information about current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Edit current user's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
 
     "/reviews": {
       "get": {
@@ -149,7 +284,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Reviews"
+                  "$ref": "#/components/schemas/ReviewsResponse"
                 }
               }
             }
@@ -183,16 +318,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Reviews"
+                  "$ref": "#/components/schemas/ReviewsResponse"
                 }
               }
             }
           },
           "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/NotFoundError"
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -220,18 +369,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "rating": {
-                    "type": "integer",
-                    "format": "int32",
-                    "example": 5
-                  },
-                  "comment": {
-                    "type": "string",
-                    "example": "Good app!"
-                  }
-                }
+                "$ref": "#/components/schemas/ReviewsRequest"
               }
             }
           }
@@ -242,16 +380,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Reviews"
+                  "$ref": "#/components/schemas/ReviewsResponse"
                 }
               }
             }
           },
           "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
           },
           "409": {
-            "description": "User has already added a review."
+            "description": "User has already added a review.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorConflictResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -279,18 +431,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "rating": {
-                    "type": "integer",
-                    "format": "int32",
-                    "example": 5
-                  },
-                  "comment": {
-                    "type": "string",
-                    "example": "Good app!"
-                  }
-                }
+                "$ref": "#/components/schemas/ReviewsRequest"
               }
             }
           }
@@ -301,16 +442,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Reviews"
+                  "$ref": "#/components/schemas/ReviewsResponse"
                 }
               }
             }
           },
           "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/NotFoundError"
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -338,10 +493,24 @@
             "description": "Review deleted"
           },
           "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/NotFoundError"
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -451,25 +620,156 @@
         }
       },
 
-      "LogoutRequest": {
-        "type": "object",
-        
-        "properties": {
-          
-        }
-      },
       "LogoutResponse": {
         "type": "object",
-        "properties": {
-          
-          
+        "properties": {  
+          "message":{
+            "type": "string",
+            "description": ""
+          }
         },
-        "example": {}
+        "example": ""
         
       },
 
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "user":{
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name"
+                
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "birthday":{
+                "type": "string",
+                "description": "User's birthday",
+                "format": "date-time"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar URL"
+               
+              }
+            }
+          }
+        },
+        "example": 
+        {         
+          "name": "user1",
+          "email": "user1@gmail.com",
+          "birthday": "1987-10-20T00:00:00.000Z",
+          "phone": "38 (097) 678 45 56",
+          "skype": "77766677",
+          "avatarURL": "https://res.cloudinary.com/ddxwmrbxq/image/upload/v1696439024/avatars/mvvjivym7kyvefrjcsdz.png"
+        }
+      },
+
+      "EditUserRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "image":{
+            "type": "string",
+            "description": "User's avatar image",
+            "format": "binary"
+          },
+          "birthday":{
+            "type": "string",
+            "description": "User's birthday"
+          },
+          "phone":{
+            "type": "string",
+            "description": "User's phone"
+          },
+          "skype":{
+            "type": "string",
+            "description": "User's skype"
+          }
+         
+        }
+      },
+      "EditUserResponse": {
+        "type": "object",
+        "properties": {
+          "user":{
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name"
+                
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "birthday":{
+                "type": "string",
+                "description": "User's birthday",
+                "format": "date-time"
+              },
+              "phone":{
+                "type": "string",
+                "description": "User's phone"
+              },
+              "skype":{
+                "type": "string",
+                "description": "User's skype"
+              },
+
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar URL"
+               
+              }
+            }
+          }
+        },
+        "example": {
+          "user":{
+            "name": "user1",
+            "email": "user1@gmail.com",
+            "birthday": "1987-10-20T00:00:00.000Z",
+            "phone": "38 (097) 678 45 56",
+            "skype": "77766677",
+            "avatarURL": "https://res.cloudinary.com/ddxwmrbxq/image/upload/v1696439024/avatars/mvvjivym7kyvefrjcsdz.png"
+          }
+        }
+      },
 
       "ReviewsRequest": {
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "integer",
+            "format": "int32",
+            "example": 5
+          },
+          "comment": {
+            "type": "string",
+            "example": "Good app!"
+          }
+        }
+      },
+
+      "ReviewsResponse": {
         "type": "array",
         "items": {
           "type": "object",
@@ -508,28 +808,110 @@
               "type": "string",
               "format": "date-time"
             }
+          }
+        }
+      },
+
       
-          
+      "errorBadRequestResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "400"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "missing fields"
+          }
+        }
+      },
+      "errorAuthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "401"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Email or password is wrong"
+          }
+        }
+      },
+      "errorUnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "401"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Not authorized"
+          }
+        }
+      },
+      "errorNotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "404"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Not found"
+          }
+        }
+      },
+      "errorEmailAuthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "409"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Email is used"
+          }
+        }
+      },
+      "errorConflictResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "409"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Conflict"
           }
         }
       }
     },
 
-    
-    "responses": {
-      "UnauthorizedError": {
-        "description": "Not authorized"
-      },
-      "NotFoundError": {
-        "description": "Not found"
-      }
-    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
       }
+
     }
   }
 }
