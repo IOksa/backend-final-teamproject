@@ -1,0 +1,1258 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "GooseTrack API",
+    "description": "The API for the GooseTrack project",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json"],
+  "servers": [
+    {
+      "description": "GooseTrack Backend URL",
+      "url": "https://backend-goosetrack.onrender.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User`s information endpoints"
+    },
+    {
+      "name": "Tasks",
+      "description": "Tasks endpoints"
+    },
+    {
+      "name": "Reviews",
+      "description": "Reviews endpoints"
+    }
+  ],
+
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorEmailAuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Login's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorAuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+  
+    "/user/current": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Information about current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/user/edit": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Edit information about current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Edit current user's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/tasks": {
+      "get": {
+          "tags": ["Tasks"],
+          "description": "Returns all customer tasks for the month",
+          "security": [
+              {
+                  "bearerAuth": []
+              }
+          ],
+          "parameters": [
+              {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "description": "The JWT token issued to the customer.",
+                  "schema": {
+                      "type": "string"
+                  }
+              },
+              {
+                  "name": "date",
+                  "in": "query",
+                  "required": true,
+                  "description": "Returns all customer tasks for the month",
+                  "schema": { "type": "string" }
+              },
+              {
+                  "name": "period",
+                  "in": "query",
+                  "required": false,
+                  "description": "Returns all customer tasks for the day",
+                  "schema": { "type": "string" }
+              }
+          ],
+          "responses": {
+              "200": {
+                  "description": "Returns all customer tasks for the month",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "array",
+                              "items": {
+                                  "$ref": "#/components/schemas/TaskResponse"
+                              }
+                          }
+                      }
+                  }
+              },
+              "401": {
+                "description": "Bearer auth failed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Not Found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorNotFoundResponse"
+                    }
+                  }
+                }
+              }
+          }
+      },
+      "post": {
+          "tags": ["Tasks"],
+          "description": "Add the customer's task",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+              {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "description": "The JWT token issued to the current user.",
+                  "schema": {
+                      "type": "string"
+                  }
+              }
+          ],
+          "requestBody": {
+              "description": "Add the customer's task",
+              "required": true,
+              "content": {
+                  "application/json": {
+                      "schema": {
+                          "$ref": "#/components/schemas/TasksRequest"
+                      }
+                  }
+              }
+          },
+          "responses": {
+              "201": {
+                  "description": "Task was successfully added",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/TaskResponse"
+                          }
+                      }
+                  }
+              },
+              "401": {
+                "description": "Bearer auth failed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                    }
+                  }
+                }
+              }
+          }
+      },
+      "patch": {
+          "tags": ["Tasks"],
+          "description": "Edit user`s own review",
+          "security": [
+              {
+                  "bearerAuth": []
+              }
+          ],
+          "parameters": [
+              {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "description": "The JWT token issued to the current user.",
+                  "schema": {
+                      "type": "string"
+                  }
+              },
+              {
+                  "in": "path",
+                  "required": true,
+                  "name": "id",
+                  "schema": {
+                      "type": "string"
+                  },
+                  "description": "Task ID."
+              }
+          ],
+          "requestBody": {
+              "required": false,
+              "content": {
+                  "application/json": {
+                      "schema": {
+                          "$ref": "#/components/schemas/TasksRequest"
+                      }
+                  }
+              }
+          },
+          "responses": {
+              "200": {
+                  "description": "The task was successfully updated.",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "string"
+                          }
+                      }
+                  }
+              },
+              "400": {
+                  "description": "Bad Request",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/errorBadRequestResponse"
+                      }
+                    }
+                  }
+              },
+              "401": {
+                "description": "Bearer auth failed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                    }
+                  }
+                }
+              }
+          }
+      },
+      "delete": {
+          "tags": ["Tasks"],
+          "description": "Delete customer's task",
+          "security": [
+              {
+                  "bearerAuth": []
+              }
+          ],
+          "parameters": [
+              {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "description": "The JWT token issued to the current user.",
+                  "schema": {
+                      "type": "string"
+                  }
+              },
+              {
+                  "in": "path",
+                  "required": true,
+                  "name": "id",
+                  "schema": {
+                      "type": "string"
+                  },
+                  "description": "Task ID."
+              }
+          ],
+          "responses": {
+              "200": {
+                  "description": "The task was successfully deleted."
+              },
+              "401": {
+                "description": "Bearer auth failed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Not Found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorNotFoundResponse"
+                    }
+                  }
+                }
+              }
+          }
+      }
+    },
+
+
+    "/reviews": {
+      "get": {
+        "tags": ["Reviews"],
+        "description": "Returns all reviews",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The number of page to return",
+            "default": "1"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of items to return",
+            "default": "20"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "All the reviews",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/own": {
+      "get": {
+        "tags": ["Reviews"],
+        "description": "Returns user`s own review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The JWT token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User`s own review",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "integer",
+                    "description": "Status code",
+                    "example": "200"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message",
+                    "example": "review deleted"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Reviews"],
+        "description": "Add user`s own review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The JWT token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User`s own review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User has already added a review.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorConflictResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Reviews"],
+        "description": "Edit user`s own review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The JWT token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User`s own review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Reviews"],
+        "description": "Delete user`s own review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The JWT token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review deleted"
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components": { 
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name":{
+            "type": "string",
+            "description": "User's name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "user":{
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name"
+                
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              }
+            }
+          }
+        },
+        "example": {
+          "user":{
+            "name": "user1",
+            "email": "user1@gmail.com" 
+          }
+        }
+      },
+
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token"
+          },
+          "user":{
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name"
+                
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar URL"
+               
+              }
+            }
+          }
+        },
+        "example": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MWM1NzA0NjlkYzZjNWRlZTljMjExYiIsImlhdCI6MTY5NjM1NjkwNCwiZXhwIjoxNjk2NDM5NzA0fQ.YU-8MNeL7iVgMR-biOM_AluJ3C3uSd_au68MopLkSHY",
+          "user":{
+            "name": "user1",
+            "email": "user1@gmail.com",
+            "avatarURL": "//www.gravatar.com/avatar/58090ea9184cf410bac8ee57bc5f985f"
+          }
+        }
+      },
+
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {  
+          "message":{
+            "type": "string",
+            "description": ""
+          }
+        },
+        "example": ""
+        
+      },
+
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "user":{
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name"
+                
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "birthday":{
+                "type": "string",
+                "description": "User's birthday",
+                "format": "YYYY-MM-DD"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar URL"
+               
+              }
+            }
+          }
+        },
+        "example": 
+        {         
+          "name": "user1",
+          "email": "user1@gmail.com",
+          "birthday": "1987-10-20T00:00:00.000Z",
+          "phone": "38 (097) 678 45 56",
+          "skype": "77766677",
+          "avatarURL": "https://res.cloudinary.com/ddxwmrbxq/image/upload/v1696439024/avatars/mvvjivym7kyvefrjcsdz.png"
+        }
+      },
+
+      "EditUserRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "image":{
+            "type": "string",
+            "description": "User's avatar image",
+            "format": "binary"
+          },
+          "birthday":{
+            "type": "string",
+            "description": "User's birthday",
+            "format": "YYYY-MM-DD",
+            "example": "1987-10-20"
+          
+          },
+          "phone":{
+            "type": "string",
+            "description": "User's phone",
+            "example": "38 (097) 678 45 56"
+          },
+          "skype":{
+            "type": "string",
+            "description": "User's skype"
+            
+          }
+         
+        }
+      },
+      "EditUserResponse": {
+        "type": "object",
+        "properties": {
+          "user":{
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name"
+                
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "birthday":{
+                "type": "string",
+                "description": "User's birthday",
+                "format": "YYYY-MM-DD"
+              
+              },
+              "phone":{
+                "type": "string",
+                "description": "User's phone"
+              },
+              "skype":{
+                "type": "string",
+                "description": "User's skype"
+                
+              },
+
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar URL"
+               
+              }
+            }
+          }
+        },
+        "example": {
+          "user":{
+            "name": "user1",
+            "email": "user1@gmail.com",
+            "birthday": "1987-10-20T00:00:00.000Z",
+            "phone": "38 (097) 678 45 56",
+            "skype": "77766677",
+            "avatarURL": "https://res.cloudinary.com/ddxwmrbxq/image/upload/v1696439024/avatars/mvvjivym7kyvefrjcsdz.png"
+          }
+        }
+      },
+
+      "TasksRequest": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "expample": "My new task"
+            },
+            "start": {
+                "type": "string",
+                "format": "HH:MM",
+                "example": "09:00"
+            },
+            "end": {
+                "type": "string",
+                "format": "HH:MM",
+                "example": "09:30"
+            },
+            "priority": {
+                "type": "string",
+                "example": " low | medium | high "
+            },
+            "date": {
+                "type": "string",
+                "format": "YYYY-MM-DD",
+                "example": "2023-10-01"
+            },
+            "category": {
+                "type": "string",
+                "example": " to-do | in-progress | done "
+            }
+        }
+      },
+      "TaskResponse": {
+        "type": "object",
+        "properties": {
+            "_id": {
+                "type": "string",
+                "example": "651aee4e068ae28a70d2b8a0"
+            },
+            "title": {
+                "type": "string",
+                "expample": "My new task"
+            },
+            "start": {
+                "type": "string",
+                "example": "09:00"
+            },
+            "end": {
+                "type": "string",
+                "example": "09:30"
+            },
+            "prioity": {
+                "type": "string",
+                "example": " low | medium | high "
+            },
+            "date": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "category": {
+                "type": "string",
+                "example": "to-do | in-progress | done"
+            },
+            "owner": {
+                "type": "string",
+                "example": "651aee4e068ae28a70d2b8a0"
+            },
+            "createdAt": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+            }
+        }
+      },
+
+      "ReviewsRequest": {
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "integer",
+            "format": "int32",
+            "example": 5
+          },
+          "comment": {
+            "type": "string",
+            "example": "Good app!"
+          }
+        }
+      },
+
+      "ReviewsResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "example": "651578edcb9480926aadc04f"
+            },
+            "owner": {
+              "type": "string",
+              "example": "651c23a451ec45f710617d5c"
+            },
+            "rating": {
+              "type": "integer",
+              "format": "int32",
+              "example": 5
+            },
+            "comment": {
+              "type": "string",
+              "example": "Good app!"
+            },
+            "name": {
+              "type": "string",
+              "example": "Nik"
+            },
+            "avatarURL": {
+              "type": "string",
+              "format": "url",
+              "example": "//www.gravatar.com/avatar/871f5ba6e066b8cd0c480e27eb454011"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      },
+     
+      "errorBadRequestResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "400"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "missing fields"
+          }
+        }
+      },
+      "errorAuthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "401"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Email or password is wrong"
+          }
+        }
+      },
+      "errorUnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "401"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Not authorized"
+          }
+        }
+      },
+      "errorNotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "404"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Not found"
+          }
+        }
+      },
+      "errorEmailAuthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "409"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Email is used"
+          }
+        }
+      },
+      "errorConflictResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "409"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Conflict"
+          }
+        }
+      }
+    },
+
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+
+    }
+  }
+}
