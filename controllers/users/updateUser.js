@@ -10,11 +10,11 @@ const updateUser = async(req, res)=>{
     console.log("req.body=", req.body);
     console.log("req.file=", req.file);
 
-    const keyes = Object.keys(req);
-    const isFile  = keyes.includes('file');
+    // const keyes = Object.keys(req);
+    // const isFile  = keyes.includes('file');
 
-    if(isFile){   
-        const cldRes = await handleUpload(req.file.originalname);
+    if(req?.file){   
+        const cldRes = await handleUpload(req.file.path);
         console.log("cldRes=", cldRes);
 
         const cloudinaryId=cldRes.public_id;
