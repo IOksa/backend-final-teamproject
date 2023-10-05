@@ -908,7 +908,7 @@
               "birthday":{
                 "type": "string",
                 "description": "User's birthday",
-                "format": "date-time"
+                "format": "YYYY-MM-DD"
               },
               "avatarURL": {
                 "type": "string",
@@ -948,15 +948,20 @@
           },
           "birthday":{
             "type": "string",
-            "description": "User's birthday"
+            "description": "User's birthday",
+            "format": "YYYY-MM-DD",
+            "example": "1987-10-20"
+          
           },
           "phone":{
             "type": "string",
-            "description": "User's phone"
+            "description": "User's phone",
+            "example": "38 (097) 678 45 56"
           },
           "skype":{
             "type": "string",
             "description": "User's skype"
+            
           }
          
         }
@@ -980,7 +985,8 @@
               "birthday":{
                 "type": "string",
                 "description": "User's birthday",
-                "format": "date-time"
+                "format": "YYYY-MM-DD"
+              
               },
               "phone":{
                 "type": "string",
@@ -989,6 +995,7 @@
               "skype":{
                 "type": "string",
                 "description": "User's skype"
+                
               },
 
               "avatarURL": {
