@@ -237,7 +237,7 @@
                         "required": true,
                         "name": "id",
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         },
                         "description": "Task ID."
                     }
@@ -301,7 +301,7 @@
                         "required": true,
                         "name": "id",
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         },
                         "description": "Task ID."
                     }
@@ -712,12 +712,12 @@
                     "start": {
                         "type": "string",
                         "format": "HH:MM",
-                        "example": "9:00"
+                        "example": "09:00"
                     },
                     "end": {
                         "type": "string",
                         "format": "HH:MM",
-                        "example": "9:30"
+                        "example": "09:30"
                     },
                     "priority": {
                         "type": "string",
@@ -747,11 +747,11 @@
                     },
                     "start": {
                         "type": "string",
-                        "example": "9:00"
+                        "example": "09:00"
                     },
                     "end": {
                         "type": "string",
-                        "example": "9:30"
+                        "example": "09:30"
                     },
                     "prioity": {
                         "type": "string",
