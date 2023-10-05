@@ -253,6 +253,253 @@
       }
     },
 
+    "/tasks": {
+      "get": {
+          "tags": ["Tasks"],
+          "description": "Returns all customer tasks for the month",
+          "security": [
+              {
+                  "bearerAuth": []
+              }
+          ],
+          "parameters": [
+              {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "description": "The JWT token issued to the customer.",
+                  "schema": {
+                      "type": "string"
+                  }
+              },
+              {
+                  "name": "date",
+                  "in": "query",
+                  "required": true,
+                  "description": "Returns all customer tasks for the month",
+                  "schema": { "type": "string" }
+              },
+              {
+                  "name": "period",
+                  "in": "query",
+                  "required": false,
+                  "description": "Returns all customer tasks for the day",
+                  "schema": { "type": "string" }
+              }
+          ],
+          "responses": {
+              "200": {
+                  "description": "Returns all customer tasks for the month",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "array",
+                              "items": {
+                                  "$ref": "#/components/schemas/TaskResponse"
+                              }
+                          }
+                      }
+                  }
+              },
+              "401": {
+                "description": "Bearer auth failed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Not Found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorNotFoundResponse"
+                    }
+                  }
+                }
+              }
+          }
+      },
+      "post": {
+          "tags": ["Tasks"],
+          "description": "Add the customer's task",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+              {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "description": "The JWT token issued to the current user.",
+                  "schema": {
+                      "type": "string"
+                  }
+              }
+          ],
+          "requestBody": {
+              "description": "Add the customer's task",
+              "required": true,
+              "content": {
+                  "application/json": {
+                      "schema": {
+                          "$ref": "#/components/schemas/TasksRequest"
+                      }
+                  }
+              }
+          },
+          "responses": {
+              "201": {
+                  "description": "Task was successfully added",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/TaskResponse"
+                          }
+                      }
+                  }
+              },
+              "401": {
+                "description": "Bearer auth failed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                    }
+                  }
+                }
+              }
+          }
+      },
+      "patch": {
+          "tags": ["Tasks"],
+          "description": "Edit user`s own review",
+          "security": [
+              {
+                  "bearerAuth": []
+              }
+          ],
+          "parameters": [
+              {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "description": "The JWT token issued to the current user.",
+                  "schema": {
+                      "type": "string"
+                  }
+              },
+              {
+                  "in": "path",
+                  "required": true,
+                  "name": "id",
+                  "schema": {
+                      "type": "string"
+                  },
+                  "description": "Task ID."
+              }
+          ],
+          "requestBody": {
+              "required": false,
+              "content": {
+                  "application/json": {
+                      "schema": {
+                          "$ref": "#/components/schemas/TasksRequest"
+                      }
+                  }
+              }
+          },
+          "responses": {
+              "200": {
+                  "description": "The task was successfully updated.",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "string"
+                          }
+                      }
+                  }
+              },
+              "400": {
+                  "description": "Bad Request",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/errorBadRequestResponse"
+                      }
+                    }
+                  }
+              },
+              "401": {
+                "description": "Bearer auth failed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                    }
+                  }
+                }
+              }
+          }
+      },
+      "delete": {
+          "tags": ["Tasks"],
+          "description": "Delete customer's task",
+          "security": [
+              {
+                  "bearerAuth": []
+              }
+          ],
+          "parameters": [
+              {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "description": "The JWT token issued to the current user.",
+                  "schema": {
+                      "type": "string"
+                  }
+              },
+              {
+                  "in": "path",
+                  "required": true,
+                  "name": "id",
+                  "schema": {
+                      "type": "string"
+                  },
+                  "description": "Task ID."
+              }
+          ],
+          "responses": {
+              "200": {
+                  "description": "The task was successfully deleted."
+              },
+              "401": {
+                "description": "Bearer auth failed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Not Found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/errorNotFoundResponse"
+                    }
+                  }
+                }
+              }
+          }
+      }
+    },
+
+
     "/reviews": {
       "get": {
         "tags": ["Reviews"],
@@ -317,8 +564,18 @@
             "description": "User`s own review",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReviewsResponse"
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "integer",
+                    "description": "Status code",
+                    "example": "200"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message",
+                    "example": "review deleted"
+                  }
                 }
               }
             }
@@ -754,6 +1011,84 @@
         }
       },
 
+      "TasksRequest": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "expample": "My new task"
+            },
+            "start": {
+                "type": "string",
+                "format": "HH:MM",
+                "example": "09:00"
+            },
+            "end": {
+                "type": "string",
+                "format": "HH:MM",
+                "example": "09:30"
+            },
+            "priority": {
+                "type": "string",
+                "example": " low | medium | high "
+            },
+            "date": {
+                "type": "string",
+                "format": "YYYY-MM-DD",
+                "example": "2023-10-01"
+            },
+            "category": {
+                "type": "string",
+                "example": " to-do | in-progress | done "
+            }
+        }
+      },
+      "TaskResponse": {
+        "type": "object",
+        "properties": {
+            "_id": {
+                "type": "string",
+                "example": "651aee4e068ae28a70d2b8a0"
+            },
+            "title": {
+                "type": "string",
+                "expample": "My new task"
+            },
+            "start": {
+                "type": "string",
+                "example": "09:00"
+            },
+            "end": {
+                "type": "string",
+                "example": "09:30"
+            },
+            "prioity": {
+                "type": "string",
+                "example": " low | medium | high "
+            },
+            "date": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "category": {
+                "type": "string",
+                "example": "to-do | in-progress | done"
+            },
+            "owner": {
+                "type": "string",
+                "example": "651aee4e068ae28a70d2b8a0"
+            },
+            "createdAt": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+            }
+        }
+      },
+
       "ReviewsRequest": {
         "type": "object",
         "properties": {
@@ -811,8 +1146,7 @@
           }
         }
       },
-
-      
+     
       "errorBadRequestResponse": {
         "type": "object",
         "properties": {
