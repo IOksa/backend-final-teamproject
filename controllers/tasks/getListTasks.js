@@ -1,17 +1,18 @@
 const { Task } = require("../../models/task");
 
 const getListTasks = async (req, res) => {
+    // const { year, month, day } = req.query;
     // const today = new Date().toISOString().slice(0, 10);
 
     // console.log(req);
     const date = new Date(req.query.date);
-    // console.log(date);
+    console.log("date", date);
     const searchYear = date.getFullYear();
-    // console.log("year", searchYear);
+    console.log("year", searchYear);
     const searchMonth = date.getMonth() + 1;
-    // console.log("month", searchMonth);
+    console.log("month", searchMonth);
     const searchDate = date.getDate();
-    // console.log("nunmber", searchDate);
+    console.log("nunmber", searchDate);
     const { period } = req.query;
     // console.log("period", period);
     // const dateList = new Date(req.params);
@@ -36,29 +37,43 @@ const getListTasks = async (req, res) => {
     // searchMonth > 12 ? 1 : searchMonth + 1;ґ
 
     const { _id: owner } = req.user;
-    console.log("owner", owner);
+    // console.log("owner", owner);
 
+    const startDate = new Date(
+        `${searchYear}-${searchMonth}-${period === "day" ? searchDate : 1}`
+    );
+    const endDate = new Date(
+        `${
+            searchMonth > 11 && period !== "day" ? searchYear + 1 : searchYear
+        }-${
+            period === "day"
+                ? searchMonth
+                : searchMonth > 11
+                ? 1
+                : searchMonth + 1
+        }-${period === "day" ? searchDate : 1}`
+    );
     const listTasks = await Task.find({
         owner,
         date: {
-            $gte: new Date(
-                `${searchYear}-${searchMonth}-${
-                    period === "day" ? searchDate : 1
-                }`
-            ),
-            $lt: new Date(
-                `${
-                    searchMonth > 11 && period !== "day"
-                        ? searchYear + 1
-                        : searchYear
-                }-${
-                    period === "day"
-                        ? searchMonth
-                        : searchMonth > 11
-                        ? 1
-                        : searchMonth + 1
-                }-${period === "day" ? searchDate + 1 : 1}`
-            ),
+            $gte: startDate,
+            // new Date(
+            // `${searchYear}-${searchMonth}-${
+            //     period === "day" ? searchDate : 1
+            //     }`),
+            $lte: endDate,
+            //     new Date(
+            //     `${
+            //         searchMonth > 11 && period !== "day"
+            //             ? searchYear + 1
+            //             : searchYear
+            //     }-${
+            //         period === "day"
+            //             ? searchMonth
+            //             : searchMonth > 11
+            //             ? 1
+            //             : searchMonth + 1
+            //     }-${period === "day" ? searchDate + 1 : 1}` ),
         },
     });
 
