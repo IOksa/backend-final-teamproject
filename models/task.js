@@ -28,7 +28,7 @@ const taskSchema = new Schema(
         date: {
             // type: String,
             type: Date,
-            default: new Date().toISOString().split("T")[0],
+            // default: new Date().toISOString().split("T")[0],
             required: true,
         },
         category: {

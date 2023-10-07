@@ -1,13 +1,14 @@
 const { Task } = require("../../models/task");
 
 const getListTasks = async (req, res) => {
+    // const { year, month, day } = req.query;
     // const today = new Date().toISOString().slice(0, 10);
 
     // console.log(req);
     const date = new Date(req.query.date);
     console.log("date", date);
     const searchYear = date.getFullYear();
-    // console.log("year", searchYear);
+    console.log("year", searchYear);
     const searchMonth = date.getMonth() + 1;
     console.log("month", searchMonth);
     const searchDate = date.getDate();
