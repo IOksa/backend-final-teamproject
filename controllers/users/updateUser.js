@@ -1,34 +1,29 @@
 const cloudinary = require("cloudinary").v2;
 const {User} = require("../../models/user");
 
-const { HttpError, handleUpload, validateDate } = require("../../helpers");
+const { validateDate, HttpError, handleUpload } = require("../../helpers");
 
 const updateUser = async(req, res)=>{
     const {_id} = req.user;
     let result;
-    console.log("update user")
-    console.log("req.body=", req.body);
-    console.log("req.file=", req.file);
-
+    
     const {email, birthday} = req.body;
-    console.log("birthday=", birthday);
-    validateDate(birthday);
-    const user = await User.findOne({email});
 
+    if(!validateDate(birthday)){
+        throw HttpError(400, "Date is not valid");
+    };
+
+    const user = await User.findOne({email});
     if(user){
         throw HttpError(409, "Email is used");
     }
 
     if(req?.file){   
         const cldRes = await handleUpload(req.file.path);
-        console.log("cldRes=", cldRes);
-
+    
         const cloudinaryId=cldRes.public_id;
         const avatarURL =cldRes.secure_url;
         const updates = {...req.body, avatarURL, cloudinaryId};
-
-        console.log("avatarURL=", avatarURL);
-        console.log("updates=", updates);
 
         if(req.user.cloudinaryId){
             await cloudinary.uploader.destroy(req.user.cloudinaryId);
