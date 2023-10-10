@@ -7,14 +7,17 @@ const getListTasks = async (req, res) => {
     // const today = new Date().toISOString().slice(0, 10);
 
     // console.log(req);
-    const dateSearch = new Date(req.query.date);
+    // const dateSearch = new Date(req.query.date);
     const date = new Date(req.query.date);
     console.log("date", date);
 
     const searchYear = date.getFullYear();
     console.log("year", searchYear);
 
-    const searchMonth = date.getMonth() + 1;
+    let searchMonth = date.getMonth() + 1;
+    if (searchMonth < 10) {
+        searchMonth = `0${searchMonth}`;
+    }
     console.log("month", searchMonth);
 
     const searchDate = date.getDate();
@@ -74,14 +77,25 @@ const getListTasks = async (req, res) => {
         console.log("tasks for this day");
         res.status(200).json(listTasks);
     } else {
-        const startDate = new Date(`${searchYear}-${searchMonth}-${1}`);
+        console.log(`${searchYear}-${searchMonth}-01T00:00:00.000+00:00`);
+        const startDate = new Date(
+            `${searchYear}-${searchMonth}-01T00:00:00.000+00:00`
+        );
         console.log("startDate", startDate);
 
-        const endDate = new Date(
-            `${searchMonth > 11 ? searchYear + 1 : searchYear}-${
-                searchMonth > 11 ? 1 : searchMonth + 1
-            }-1`
-        );
+        let endDateString = "";
+        if (Number(searchMonth) > 11) {
+            endDateString = `${searchYear + 1}-01`;
+        } else {
+            endDateString = `${searchYear}-`;
+            if (searchMonth < 9) {
+                endDateString += "0";
+            }
+            endDateString += `${Number(searchMonth) + 1}`;
+        }
+        endDateString += "-01T00:00:00.000+00:00";
+        console.log("endDateString", endDateString);
+        const endDate = new Date(endDateString);
         console.log("endtDate", endDate);
 
         const listTasks = await Task.find({
@@ -92,7 +106,7 @@ const getListTasks = async (req, res) => {
                 // `${searchYear}-${searchMonth}-${
                 //     period === "day" ? searchDate : 1
                 //     }`),
-                $lte: endDate,
+                $lt: endDate,
                 //     new Date(
                 //     `${
                 //         searchMonth > 11 && period !== "day"
