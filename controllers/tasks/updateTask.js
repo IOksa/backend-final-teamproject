@@ -7,9 +7,9 @@ const updateTask = async (req, res) => {
     if (!task) {
         throw HttpError(404, "Not found");
     }
-    console.log("task updated");
 
-    res.json({ message: "Task updated" });
+    // res.json({ message: "Task updated" });
+    res.json(task);
 };
 
 module.exports = updateTask;

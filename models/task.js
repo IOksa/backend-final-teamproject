@@ -28,7 +28,7 @@ const taskSchema = new Schema(
         date: {
             // type: String,
             type: Date,
-            default: new Date().toISOString().split("T")[0],
+            // default: new Date().toISOString().split("T")[0],
             required: true,
         },
         category: {
@@ -65,8 +65,11 @@ const addTaskSchema = Joi.object({
     priority: Joi.string().required().messages({
         "any.required": "missing required priority field",
     }),
-    date: Joi.string()
+    date: Joi
+        // .date()
+        .string()
         .pattern(
+            // /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/
             /^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/
         )
         .required(),
@@ -79,31 +82,17 @@ const addTaskSchema = Joi.object({
 });
 
 const editingTaskSchema = Joi.object({
-    title: Joi.string()
-        // .required()
-        .max(250)
-        .messages({
-            "any.required": "missing required title field",
-        }),
+    title: Joi.string().max(250).messages({
+        "any.required": "missing required title field",
+    }),
     start: Joi.string().pattern(/^([0-9]{2})\:([0-9]{2})$/),
-    // Joi.date().pattern(/^([0-9]{2})\:([0-9]{2})$/),
-    // Joi.string().required().messages({
-    // "any.required": "missing required start field",}),
     end: Joi.string().pattern(/^([0-9]{2})\:([0-9]{2})$/),
-    // Joi.string().required().messages({
-    // "any.required": "missing required end field",}),
-    priority: Joi.string()
-        // .required()
-        .messages({
-            "any.required": "missing required priority field",
-        }),
+    priority: Joi.string().messages({
+        "any.required": "missing required priority field",
+    }),
     date: Joi.string().pattern(
         /^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/
     ),
-    // .required()
-    // .validate("YYYY-MM-DD"),
-    // .message({
-    // "any.required": "missing required date field",}),
     category: Joi.string().required().messages({
         "any.required": "missing required category field",
     }),
