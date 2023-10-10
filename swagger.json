@@ -142,7 +142,15 @@
       "post": {
         "tags": ["Auth"],
         "summary": "User logout",
-        "parameters": [],
+        "parameters": [{
+          "in": "header",
+          "required": true,
+          "name": "Authorization",
+          "description": "The token issued to the current user.",
+          "schema": {
+            "type": "string"
+          }
+        }],
         "security": [{ "Bearer": [] }],
         "responses": {
           "204": {
@@ -173,7 +181,15 @@
       "get": {
         "tags": ["User"],
         "summary": "Information about current user",
-        "parameters": [],
+        "parameters": [{
+          "in": "header",
+          "required": true,
+          "name": "Authorization",
+          "description": "The token issued to the current user.",
+          "schema": {
+            "type": "string"
+          }
+        }],
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
