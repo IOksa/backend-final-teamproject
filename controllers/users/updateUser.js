@@ -1,7 +1,7 @@
 const cloudinary = require("cloudinary").v2;
 const {User} = require("../../models/user");
 
-const { HttpError, handleUpload } = require("../../helpers");
+const { HttpError, handleUpload, validateDate } = require("../../helpers");
 
 const updateUser = async(req, res)=>{
     const {_id} = req.user;
@@ -10,8 +10,13 @@ const updateUser = async(req, res)=>{
     console.log("req.body=", req.body);
     console.log("req.file=", req.file);
 
-    // const keyes = Object.keys(req);
-    // const isFile  = keyes.includes('file');
+    const {email, birthday} = req.body;
+    validateDate(birthday);
+    const user = await User.findOne({email});
+
+    if(user){
+        throw HttpError(409, "Email is used");
+    }
 
     if(req?.file){   
         const cldRes = await handleUpload(req.file.path);

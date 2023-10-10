@@ -51,11 +51,8 @@ const uploadAndValidate = (req, res, next) => {
               next(HttpError(400, error.message));
               
           }
-   
           next();
       }
-      
-
     });
   };
 

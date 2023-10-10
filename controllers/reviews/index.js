@@ -38,11 +38,15 @@ async function addReview(req, res) {
 }
 
 async function updateReview(req, res) {
-  const { _id: owner } = req.user;
+  const { _id: owner, avatarURL } = req.user;
 
-  const updatedReview = await Review.findOneAndUpdate({ owner }, req.body, {
-    new: true,
-  });
+  const updatedReview = await Review.findOneAndUpdate(
+    { owner },
+    { ...req.body, avatarURL },
+    {
+      new: true,
+    }
+  );
   if (!updatedReview) {
     throw HttpError(404, "Not found");
   }
