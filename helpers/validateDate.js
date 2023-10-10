@@ -3,9 +3,9 @@ const validateDate = (date)=>{
     const year=parseDate[0];
     const month=parseDate[1];
     const day=parseDate[2];
-    
-    const rangeMonth1=[1,3,5,7,8,10,12];
-    const rangeMonth2=[4,6,9,11];
+        
+    const rangeMonth1=['01','03','05','07','08','10','12'];
+    const rangeMonth2=['04','06','09','11'];
 
     let isLeapYear=true;
     if (year%4!==0){
@@ -18,19 +18,16 @@ const validateDate = (date)=>{
     
     }
        
-    console.log("isLeapYear=", isLeapYear);
     if(rangeMonth1.includes(month) && day>31){
-       return false;
+        return false;
     }
     if(rangeMonth2.includes(month) && day>30){
         return false;
     }
-    if(isLeapYear && month===2 && day>29){
-        console.log("isLeapYear && month===2 && day>29")
+    if(isLeapYear && month==='02' && day>29){
         return false;
     }
-    if(!isLeapYear && month===2 && day>28){
-        console.log("!isLeapYear && month===2 && day>28")
+    if(!isLeapYear && month==='02' && day>28){
         return false;
     }
     return true;

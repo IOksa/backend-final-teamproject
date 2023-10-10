@@ -9,9 +9,11 @@ const updateUser = async(req, res)=>{
     
     const {email, birthday} = req.body;
 
-    if(!validateDate(birthday)){
-        throw HttpError(400, "Date is not valid");
-    };
+    if(birthday){
+        if(!validateDate(birthday)){
+            throw HttpError(400, "Date is not valid");
+        };
+    }
 
     const user = await User.findOne({email});
     if(user){
