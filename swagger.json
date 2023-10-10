@@ -151,7 +151,7 @@
             "type": "string"
           }
         }],
-        "security": [{ "Bearer": [] }],
+        "security": [{ "bearerAuth": [] }],
         "responses": {
           "204": {
             "description": "Successful operation",
@@ -177,7 +177,7 @@
       }
     },
   
-    "/user/current": {
+    "/users/current": {
       "get": {
         "tags": ["User"],
         "summary": "Information about current user",
@@ -190,7 +190,7 @@
             "type": "string"
           }
         }],
-        "security": [{ "Bearer": [] }],
+        "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -216,12 +216,20 @@
       }
     },
 
-    "/user/edit": {
+    "/users/edit": {
       "patch": {
         "tags": ["User"],
         "summary": "Edit information about current user",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "parameters": [{
+          "in": "header",
+          "required": true,
+          "name": "Authorization",
+          "description": "The token issued to the current user.",
+          "schema": {
+            "type": "string"
+          }
+        }],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "description": "Edit current user's object",
           "required": true,
