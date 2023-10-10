@@ -234,7 +234,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                  
+                    "$ref": "#/components/schemas/errorBadRequestResponse"
+                   
+                  
                 }
               }
             }
@@ -245,6 +248,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorEmailAuthResponse"
                 }
               }
             }
@@ -859,6 +872,19 @@
                 "description": "User's email",
                 "format": "email"
               },
+              "birthday":{
+                "type": "string",
+                "description": "User's birthday",
+                "format": "YYYY-MM-DD"
+              },
+              "phone":{
+                "type": "string",
+                "description": "User's phone"
+              },
+              "skype":{
+                "type": "string",
+                "description": "User's skype"
+              },
               "avatarURL": {
                 "type": "string",
                 "description": "User's avatar URL"
@@ -872,6 +898,9 @@
           "user":{
             "name": "user1",
             "email": "user1@gmail.com",
+            "birthday": "1987-10-20T00:00:00.000Z",
+            "phone": "38 (097) 678 45 56",
+            "skype": "77766677",
             "avatarURL": "//www.gravatar.com/avatar/58090ea9184cf410bac8ee57bc5f985f"
           }
         }
@@ -909,6 +938,14 @@
                 "type": "string",
                 "description": "User's birthday",
                 "format": "YYYY-MM-DD"
+              },
+              "phone":{
+                "type": "string",
+                "description": "User's phone"
+              },
+              "skype":{
+                "type": "string",
+                "description": "User's skype"
               },
               "avatarURL": {
                 "type": "string",
@@ -1154,7 +1191,7 @@
         }
       },
      
-      "errorBadRequestResponse": {
+       "errorBadRequestResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -1166,6 +1203,21 @@
             "type": "string",
             "description": "Error message",
             "example": "missing fields"
+          }
+        }
+      },
+      "errorValidateDateResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "400"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Date is not valid"
           }
         }
       },
