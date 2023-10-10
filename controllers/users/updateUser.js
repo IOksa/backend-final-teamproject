@@ -11,6 +11,7 @@ const updateUser = async(req, res)=>{
     console.log("req.file=", req.file);
 
     const {email, birthday} = req.body;
+    console.log("birthday=", birthday);
     validateDate(birthday);
     const user = await User.findOne({email});
 
