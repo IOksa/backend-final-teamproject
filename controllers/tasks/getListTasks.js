@@ -7,7 +7,7 @@ const getListTasks = async (req, res) => {
     // const today = new Date().toISOString().slice(0, 10);
 
     // console.log(req);
-    // const dateSearch = new Date(req.query.date);
+    const dateSearch = new Date(req.query.date);
     const date = new Date(req.query.date);
     console.log("date", date);
 
