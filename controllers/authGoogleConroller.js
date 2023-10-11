@@ -59,12 +59,18 @@ exports.googleRedirect = async (req, res) => {
             Authorization: `Bearer ${tokenData.data.access_token}`,
         },
     });
-    console.log("userData", userData);
+
+    console.log("********** USER INFO *************");
+    console.log("name:", userData.data.given_name);
+    console.log("email:", userData.data.email);
+    console.log("id:", userData.data.id);
+    console.log("**********************************");
 
     const email = userData.data.email;
-    const name = userData.data.name;
+    const name = userData.data.given_name;
     const avatarURL = userData.data.picture;
-    const password = userData.data.id;
+    // const password = userData.data.id;
+    const password = email;
 
     let user = await User.findOne({ email });
 
@@ -113,6 +119,7 @@ exports.googleRedirect = async (req, res) => {
     // if (!passwordCompare) {
     //     throw HttpError(401, "Email or password is wrong");
     // }
+
     user = await User.findOne({ email });
     const payload = { id: user._id };
     const { SECRET_KEY } = process.env;
@@ -131,7 +138,7 @@ exports.googleRedirect = async (req, res) => {
     // console.log(`User was created`)
 
     return res.redirect(
-        `https://anigvo.github.io/goosetrack-group6-project/calendar`
+        `https://anigvo.github.io/goosetrack-group6-project/calendar?token=${token}`
         // `https://anigvo.github.io/goosetrack-group6-project/login?token=${token}`
         // "https://anigvo.github.io/goosetrack-group6-project"
         // "https://www.google.com/"
