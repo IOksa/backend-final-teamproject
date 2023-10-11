@@ -70,7 +70,7 @@ exports.googleRedirect = async (req, res) => {
     const name = userData.data.given_name;
     const avatarURL = userData.data.picture;
     // const password = userData.data.id;
-    const password = email;
+    const password = "password";
 
     let user = await User.findOne({ email });
 
