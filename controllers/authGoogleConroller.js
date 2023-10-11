@@ -138,9 +138,9 @@ exports.googleRedirect = async (req, res) => {
     // console.log(`User was created`)
 
     return res.redirect(
-        `https://anigvo.github.io/goosetrack-group6-project/calendar?token=${token}`
+        // `https://anigvo.github.io/goosetrack-group6-project/calendar?token=${token}`
         // `https://anigvo.github.io/goosetrack-group6-project/login?token=${token}`
-        // "https://anigvo.github.io/goosetrack-group6-project"
+        `https://anigvo.github.io/goosetrack-group6-project/?token=${token}`
         // "https://www.google.com/"
         // `${process.env.FRONTEND_URL}?email=${userData.data.email}`
     );
