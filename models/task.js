@@ -1,10 +1,7 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-
 const { handleMongooseError } = require("../helpers");
 
-// const currentData = new Date().toISOString().split("T")[0];
-// console.log(currentData);
 const taskSchema = new Schema(
     {
         title: {
@@ -26,9 +23,7 @@ const taskSchema = new Schema(
             required: true,
         },
         date: {
-            // type: String,
             type: Date,
-            // default: new Date().toISOString().split("T")[0],
             required: true,
         },
         category: {
@@ -53,29 +48,24 @@ const addTaskSchema = Joi.object({
     }),
     start: Joi.string()
         .required()
-        .pattern(/^([0-9]{2})\:([0-9]{2})$/),
-    // Joi.date().pattern(/^([0-9]{2})\:([0-9]{2})$/),
-    // Joi.string().required().messages({
-    // "any.required": "missing required start field",}),
+        .pattern(/^([0-9]{2})\:([0-9]{2})$/)
+        .messages({
+            "any.required": "missing required start field",
+        }),
     end: Joi.string()
         .required()
-        .pattern(/^([0-9]{2})\:([0-9]{2})$/),
-    // Joi.string().required().messages({
-    // "any.required": "missing required end field",}),
+        .pattern(/^([0-9]{2})\:([0-9]{2})$/)
+        .messages({
+            "any.required": "missing required end field",
+        }),
     priority: Joi.string().required().messages({
         "any.required": "missing required priority field",
     }),
-    date: Joi
-        // .date()
-        .string()
+    date: Joi.string()
         .pattern(
-            // /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/
             /^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/
         )
-        .required(),
-    // .validate("YYYY-MM-DD"),
-    // .message({
-    // "any.required": "missing required date field",}),
+        .required(), // .message({"any.required": "missing required date field",}),
     category: Joi.string().required().messages({
         "any.required": "missing required category field",
     }),

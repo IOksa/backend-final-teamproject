@@ -7,8 +7,6 @@ const updateTask = async (req, res) => {
     if (!task) {
         throw HttpError(404, "Not found");
     }
-
-    // res.json({ message: "Task updated" });
     res.json(task);
 };
 
