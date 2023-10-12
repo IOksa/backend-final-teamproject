@@ -1,6 +1,7 @@
 // const queryString = require("querystring");
 // import queryString from "query-string";
 const queryString = require("query-string");
+const gravatar = require("gravatar");
 
 const { User } = require("../models/user");
 const crypto = require("node:crypto");
@@ -9,9 +10,6 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const { HttpError } = require("../helpers");
 // const URL = require("url");
-
-// const { JWT_SECRET, BASE_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } =
-//     process.env;
 
 exports.googleAuth = async (req, res) => {
     console.log("controller googleAuth");
@@ -68,7 +66,8 @@ exports.googleRedirect = async (req, res) => {
 
     const email = userData.data.email;
     const name = userData.data.given_name;
-    const avatarURL = userData.data.picture;
+    // const avatarURL = userData.data.picture;
+    const avatarURL = gravatar.url(userData.data.picture);
     // const password = userData.data.id;
     const password = "password";
 
@@ -78,7 +77,7 @@ exports.googleRedirect = async (req, res) => {
     //     // const password = v4();
     //     const password = userData.data.id;
     //     console.log(password);
-    //     // const hashPassword = await crypto.hash(password, 10);
+    // const hashPassword = await crypto.hash(password, 16);
     //     user = await User.create({
     //         name,
     //         email,
@@ -97,14 +96,14 @@ exports.googleRedirect = async (req, res) => {
     // const avatarURL = gravatar.url(email);
 
     const verificationToken = crypto.randomUUID();
-
+    console.log(avatarURL);
     if (!user) {
         await User.create({
             name,
             email,
             password,
             // : hashPassword,
-            // avatarURL,
+            avatarURL,
             verificationToken,
         });
     }
