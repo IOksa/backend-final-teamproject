@@ -3,6 +3,7 @@ const { Task } = require("../../models/task");
 const getListTasks = async (req, res) => {
     const { _id: owner } = req.user;
 
+
     const dateSearch = new Date(req.query.date);
     const date = new Date(req.query.date);
     const searchYear = date.getFullYear();
